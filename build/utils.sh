@@ -103,16 +103,16 @@ is_osx() {
 
 builder() {
     if is_musl && is_x86_64; then
-        set -u
-        D=$(mktemp -d)
-        git clone https://github.com/rust-embedded/cross.git "$D"
-        cd "$D"
-        curl -O -L "https://gist.githubusercontent.com/nickbabcock/c7bdc8e5974ed9956abf46ffd7dc13ff/raw/e211bc17ea88e505003ad763fac7060b4ac1d8d0/patch"
-        git apply patch
-        cargo install --path .
-        rm -rf "$D"
+        # set -u
+        # D=$(mktemp -d)
+        # git clone https://github.com/rust-embedded/cross.git "$D"
+        # cd "$D"
+        # curl -O -L "https://gist.githubusercontent.com/nickbabcock/c7bdc8e5974ed9956abf46ffd7dc13ff/raw/e211bc17ea88e505003ad763fac7060b4ac1d8d0/patch"
+        # git apply patch
+        # cargo install --path .
+        # rm -rf "$D"
 
-        echo "cross"
+        echo "cargo"
     else
         echo "cargo"
     fi
