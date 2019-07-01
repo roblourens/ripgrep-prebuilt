@@ -1,0 +1,51 @@
+# Based on https://github.com/BurntSushi/ripgrep/blob/master/appveyor.yml
+
+parameters:
+  target: ''
+  gcc_version: ''
+  rust_version: 'nightly'
+
+steps:
+- powershell: |
+    gci env:*
+    $REPO=node -p "require('./config.json').ripgrepRepo"
+    $TREEISH=node -p "require('./config.json').ripgrepTreeish"
+    git clone https://github.com/${REPO}.git
+    cd ripgrep
+    git checkout $TREEISH
+- powershell: |
+    Invoke-WebRequest https://win.rustup.rs -UseBasicParsing -OutFile rustup-init.exe
+    .\rustup-init.exe -y --default-host $env:TARGET
+    $env:PATH+=";C:\Users\appveyor\.cargo\bin"
+
+    rustup default $env:RUST_VERSION
+    rustc -V
+    cargo -V
+
+    rustup target add $env:TARGET
+  env:
+    RUST_VERSION: ${{ parameters.rust_version }}
+    TARGET: ${{ parameters.target }}
+  displayName: Install Rust
+- powershell: |
+    $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
+    cargo build --release --features pcre2
+    mkdir staging
+    copy target\release\rg.exe staging
+    cd staging
+
+    7z a ../test.zip *
+    #appveyor PushArtifact ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip
+  workingDirectory: ripgrep
+  env:
+    TARGET: ${{ parameters.target }}
+  displayName: Build
+- task: GitHubRelease@0
+  inputs:
+    gitHubConnection: GitHub
+    repositoryName: '$(Build.Repository.Name)'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'auto'
+    assets: '$(Build.ArtifactStagingDirectory)/*'
+    isDraft: true
