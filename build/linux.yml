@@ -27,7 +27,7 @@ steps:
   displayName: Build
 - task: GitHubRelease@0
   inputs:
-    gitHubConnection: GitHub
+    gitHubConnection: roblourens
     repositoryName: '$(Build.Repository.Name)'
     action: 'create'
     target: '$(Build.SourceVersion)'
