@@ -7,18 +7,6 @@ set -ex
 
 . "$(dirname $0)/utils.sh"
 
-# Generate artifacts for release
-mk_artifacts() {
-    CARGO="$(builder)"
-    if is_arm; then
-        "$CARGO" build --target "$TARGET" --release
-    else
-        # Technically, MUSL builds will force PCRE2 to get statically compiled,
-        # but we also want PCRE2 statically build for macOS binaries.
-        PCRE2_SYS_STATIC=1 "$CARGO" build --target "$TARGET" --release --features 'pcre2'
-    fi
-}
-
 mk_tarball() {
     pushd ..
     this_tag=`git tag -l --contains HEAD`
@@ -36,7 +24,6 @@ mk_tarball() {
 }
 
 main() {
-    mk_artifacts
     mk_tarball
 }
 

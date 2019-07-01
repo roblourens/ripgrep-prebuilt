@@ -53,5 +53,4 @@ steps:
     target: '$(Build.SourceVersion)'
     tagSource: 'auto'
     assets: '$(Build.ArtifactStagingDirectory)/*'
-    isDraft: true
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
