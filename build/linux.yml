@@ -8,7 +8,7 @@ steps:
     set -ex
 
     REPO=$(node -p "require('./config.json').ripgrepRepo")
-    TREEISH=$(node -p "require('./config.json').ripgrepTreeish")
+    TREEISH=$(node -p "require('./config.json').ripgrepTag")
     git clone https://github.com/${REPO}.git
     cd ripgrep
     git checkout $TREEISH

@@ -21,7 +21,7 @@ main() {
 
     # Show the output of the most recent build.rs stderr.
     set +x
-    stderr="$(find "target/$TARGET/debug" -name stderr -print0 | xargs -0 ls -t | head -n1)"
+    stderr="$(find "target/$TARGET/release" -name stderr -print0 | xargs -0 ls -t | head -n1)"
     if [ -s "$stderr" ]; then
       echo "===== $stderr ====="
       cat "$stderr"
@@ -30,7 +30,7 @@ main() {
     set -x
 
     # sanity check the file type
-    file target/"$TARGET"/debug/rg
+    file target/"$TARGET"/release/rg
 
     # Apparently tests don't work on arm, so just bail now. I guess we provide
     # ARM releases on a best effort basis?
