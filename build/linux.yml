@@ -14,17 +14,23 @@ steps:
     git checkout $TREEISH
   displayName: Clone Ripgrep
 - script: build/install.sh
+  displayName: Install Rust
   env:
     RUST_VERSION: ${{ parameters.rust_version }}
     TARGET: ${{ parameters.target }}
     GCC_VERSION: ${{ parameters.gcc_version }}
-  displayName: Install Rust
 - script: ../build/script.sh
+  displayName: Build
   workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
     OUT_DIR: $(Build.ArtifactStagingDirectory)
-  displayName: Build
+- script: ../build/package.sh
+  displayName: Package
+  workingDirectory: ripgrep
+  env:
+    TARGET: ${{ parameters.target }}
+    OUT_DIR: $(Build.ArtifactStagingDirectory)
 - task: GitHubRelease@0
   inputs:
     gitHubConnection: GitHub
