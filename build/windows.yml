@@ -45,8 +45,8 @@ steps:
 #     TARGET: ${{ parameters.target }}
 #     OUT_DIR: $(Build.ArtifactStagingDirectory)
 #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
-- script: |
-    echo 'payload' > $OUT_DIR/$TARGET.txt
+- powershell: |
+    echo 'payload' > $env:OUT_DIR/$env:TARGET.txt
   env:
     OUT_DIR: $(Build.ArtifactStagingDirectory)
     TARGET: ${{ parameters.target }}
