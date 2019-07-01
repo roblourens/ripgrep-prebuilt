@@ -50,5 +50,11 @@ jobs:
     - template: windows.yml
       parameters:
         target: i686-pc-windows-msvc
+
 trigger:
-- az-pipelines
+  branches:
+    include:
+    - az-pipelines
+  tags:
+    include:
+    - v*
