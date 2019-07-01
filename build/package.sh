@@ -20,7 +20,7 @@ mk_tarball() {
     # Copy the ripgrep binary and strip it.
     "${gcc_prefix}strip" "target/$TARGET/release/rg"
 
-    tar czf "target/$TARGET/release/rg" "$OUT_DIR/$name.tar.gz"
+    tar czf "$OUT_DIR/$name.tar.gz" "target/$TARGET/release/rg"
 }
 
 main() {
