@@ -39,6 +39,9 @@ steps:
     popd
 
     $name="ripgrep-${this_tag}-${env:TARGET}.zip"
+    dir
+    dir .\target
+    dir .\target\${env:TARGET}\release\rg.exe
     Compress-Archive -Update -Path .\target\${env:TARGET}\release\rg.exe -DestinationPath $name
     echo "##vso[task.setvariable variable=Name]$name"
   displayName: Build
