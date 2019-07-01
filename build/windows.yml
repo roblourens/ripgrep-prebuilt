@@ -56,6 +56,7 @@ steps:
     repositoryName: '$(Build.Repository.Name)'
     action: 'edit'
     target: '$(Build.SourceVersion)'
+    tag: '$(Build.SourceBranchName)'
     tagSource: 'auto'
     assets: '$(Build.ArtifactStagingDirectory)/*'
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
