@@ -32,7 +32,7 @@ steps:
   displayName: Install Rust
 - powershell: |
     $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
-    cargo build --release --features pcre2 --verbose
+    cargo build --release --target $env:TARGET --features pcre2
 
     pushd ..
     $this_tag=git tag -l --contains HEAD
