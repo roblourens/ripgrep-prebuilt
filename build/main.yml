@@ -52,9 +52,9 @@ jobs:
         target: i686-pc-windows-msvc
 
 trigger:
-  branches:
-    include:
-    - az-pipelines
+  #branches:
+  #  include:
+  #  - az-pipelines
   tags:
     include:
     - v*

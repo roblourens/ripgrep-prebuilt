@@ -13,17 +13,21 @@ steps:
     cd ripgrep
     git checkout $TREEISH
   displayName: Clone Ripgrep
-- script: build/install.sh
-  displayName: Install Rust
+# - script: build/install.sh
+#   displayName: Install Rust
+#   env:
+#     RUST_VERSION: ${{ parameters.rust_version }}
+#     TARGET: ${{ parameters.target }}
+#     GCC_VERSION: ${{ parameters.gcc_version }}
+# - script: ../build/script.sh
+#   displayName: Build
+#   workingDirectory: ripgrep
+#   env:
+#     TARGET: ${{ parameters.target }}
+- script: |
+    echo 'payload' > $OUT_DIR
   env:
-    RUST_VERSION: ${{ parameters.rust_version }}
-    TARGET: ${{ parameters.target }}
-    GCC_VERSION: ${{ parameters.gcc_version }}
-- script: ../build/script.sh
-  displayName: Build
-  workingDirectory: ripgrep
-  env:
-    TARGET: ${{ parameters.target }}
+    OUT_DIR: $(Build.ArtifactStagingDirectory)
 - script: ../build/package.sh
   displayName: Package
   workingDirectory: ripgrep
