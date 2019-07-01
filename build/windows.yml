@@ -46,17 +46,12 @@ steps:
 #     OUT_DIR: $(Build.ArtifactStagingDirectory)
 #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - powershell: |
-    echo 'payload' > $env:OUT_DIR/$env:TARGET.txt
+    echo 'payload' > $env:BUILD_ARTIFACTSTAGINGDIRECTORY/$env:TARGET.txt
+    echo "##vso[task.setvariable variable=Name]$env:TARGET.txt"
   env:
-    OUT_DIR: $(Build.ArtifactStagingDirectory)
     TARGET: ${{ parameters.target }}
-- task: GitHubRelease@0
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
   inputs:
-    gitHubConnection: GitHub
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'edit'
-    target: '$(Build.SourceVersion)'
-    tag: '$(Build.SourceBranchName)'
-    tagSource: 'auto'
-    assets: '$(Build.ArtifactStagingDirectory)/*'
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+    artifactName: $(Name)
+    targetPath: $(Build.ArtifactStagingDirectory)/$(Name)

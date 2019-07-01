@@ -25,9 +25,9 @@ steps:
 #   env:
 #     TARGET: ${{ parameters.target }}
 - script: |
-    echo 'payload' > $OUT_DIR/$TARGET.txt
+    echo 'payload' > $BUILD_ARTIFACTSTAGINGDIRECTORY/$TARGET.txt
+    echo "##vso[task.setvariable variable=Name]$TARGET.txt"
   env:
-    OUT_DIR: $(Build.ArtifactStagingDirectory)
     TARGET: ${{ parameters.target }}
 # - script: ../build/package.sh
 #   displayName: Package
@@ -36,13 +36,8 @@ steps:
 #     TARGET: ${{ parameters.target }}
 #     OUT_DIR: $(Build.ArtifactStagingDirectory)
 #   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
-- task: GitHubRelease@0
+- task: PublishPipelineArtifact@0
+  displayName: 'Publish Pipeline Artifact'
   inputs:
-    gitHubConnection: GitHub
-    repositoryName: '$(Build.Repository.Name)'
-    action: 'edit'
-    target: '$(Build.SourceVersion)'
-    tagSource: 'auto'
-    tag: '$(Build.SourceBranchName)'
-    assets: '$(Build.ArtifactStagingDirectory)/*'
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+    artifactName: $(Name)
+    targetPath: $(Build.ArtifactStagingDirectory)/$(Name)

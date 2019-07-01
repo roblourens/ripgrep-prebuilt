@@ -1,19 +1,19 @@
 jobs:
-- job: Linux_64
+- job: linux_64
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
     - template: linux.yml
       parameters:
         target: x86_64-unknown-linux-musl
-- job: Linux_32
+- job: linux_32
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
     - template: linux.yml
       parameters:
         target: i686-unknown-linux-musl
-- job: Linux_arm
+- job: linux_arm
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -21,7 +21,7 @@ jobs:
       parameters:
         target: arm-unknown-linux-gnueabihf
         gcc_version: 4.8
-- job: Linux_aarch64
+- job: linux_aarch64
   pool:
     vmImage: 'ubuntu-16.04'
   steps:
@@ -36,20 +36,34 @@ jobs:
     - template: linux.yml
       parameters:
         target: x86_64-apple-darwin
-- job: Win_64
+- job: win_64
   pool:
     vmImage: VS2017-Win2016
   steps:
     - template: windows.yml
       parameters:
         target: x86_64-pc-windows-msvc
-- job: Win_32
+- job: win_32
   pool:
     vmImage: VS2017-Win2016
   steps:
     - template: windows.yml
       parameters:
         target: i686-pc-windows-msvc
+- job: publish
+  pool:
+    vmImage: 'ubuntu-16.04'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  dependsOn:
+  - linux_64
+  - linux_32
+  - linux_arm
+  - linux_aarch64
+  - macOS
+  - win_64
+  - win_32
+  steps:
+    - template: publish.yml
 
 trigger:
   #branches:
