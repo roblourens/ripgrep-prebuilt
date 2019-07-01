@@ -25,9 +25,10 @@ steps:
 #   env:
 #     TARGET: ${{ parameters.target }}
 - script: |
-    echo 'payload' > $OUT_DIR
+    echo 'payload' > $OUT_DIR/$TARGET.txt
   env:
     OUT_DIR: $(Build.ArtifactStagingDirectory)
+    TARGET: ${{ parameters.target }}
 - script: ../build/package.sh
   displayName: Package
   workingDirectory: ripgrep
@@ -39,7 +40,7 @@ steps:
   inputs:
     gitHubConnection: GitHub
     repositoryName: '$(Build.Repository.Name)'
-    action: 'create'
+    action: 'edit'
     target: '$(Build.SourceVersion)'
     tagSource: 'auto'
     assets: '$(Build.ArtifactStagingDirectory)/*'
