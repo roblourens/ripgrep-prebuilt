@@ -29,13 +29,13 @@ steps:
   env:
     OUT_DIR: $(Build.ArtifactStagingDirectory)
     TARGET: ${{ parameters.target }}
-- script: ../build/package.sh
-  displayName: Package
-  workingDirectory: ripgrep
-  env:
-    TARGET: ${{ parameters.target }}
-    OUT_DIR: $(Build.ArtifactStagingDirectory)
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+# - script: ../build/package.sh
+#   displayName: Package
+#   workingDirectory: ripgrep
+#   env:
+#     TARGET: ${{ parameters.target }}
+#     OUT_DIR: $(Build.ArtifactStagingDirectory)
+#   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: GitHubRelease@0
   inputs:
     gitHubConnection: GitHub
