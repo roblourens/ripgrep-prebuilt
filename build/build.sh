@@ -12,14 +12,16 @@ main() {
 
     # Test a normal debug build.
     if is_arm || is_aarch64; then
-        "$CARGO" build --target "$TARGET" --verbose
+        "$CARGO" build --target "$TARGET" --release
     else
-        "$CARGO" build --target "$TARGET" --verbose --all --features 'pcre2'
+        # Technically, MUSL builds will force PCRE2 to get statically compiled,
+        # but we also want PCRE2 statically build for macOS binaries.
+        PCRE2_SYS_STATIC=1 "$CARGO" build --target "$TARGET" --release --features 'pcre2'
     fi
 
     # Show the output of the most recent build.rs stderr.
     set +x
-    stderr="$(find "target/$TARGET/debug" -name stderr -print0 | xargs -0 ls -t | head -n1)"
+    stderr="$(find "target/$TARGET/release" -name stderr -print0 | xargs -0 ls -t | head -n1)"
     if [ -s "$stderr" ]; then
       echo "===== $stderr ====="
       cat "$stderr"
@@ -28,7 +30,7 @@ main() {
     set -x
 
     # sanity check the file type
-    file target/"$TARGET"/debug/rg
+    file target/"$TARGET"/release/rg
 
     # Apparently tests don't work on arm, so just bail now. I guess we provide
     # ARM releases on a best effort basis?

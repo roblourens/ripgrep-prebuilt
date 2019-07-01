@@ -7,20 +7,6 @@ if [ -f $HOME/.cargo/env ]; then
     source $HOME/.cargo/env
 fi
 
-# Finds Cargo's `OUT_DIR` directory from the most recent build.
-#
-# This requires one parameter corresponding to the target directory
-# to search for the build output.
-cargo_out_dir() {
-    # This works by finding the most recent stamp file, which is produced by
-    # every ripgrep build.
-    target_dir="$1"
-    find "$target_dir" -name ripgrep-stamp -print0 \
-      | xargs -0 ls -t \
-      | head -n1 \
-      | xargs dirname
-}
-
 host() {
     case "$AGENT_OS" in
         Linux)
@@ -117,16 +103,18 @@ is_osx() {
 
 builder() {
     if is_musl && is_x86_64; then
-        set -u
-        D=$(mktemp -d)
-        git clone https://github.com/rust-embedded/cross.git "$D"
-        cd "$D"
-        curl -O -L "https://gist.githubusercontent.com/nickbabcock/c7bdc8e5974ed9956abf46ffd7dc13ff/raw/e211bc17ea88e505003ad763fac7060b4ac1d8d0/patch"
-        git apply patch
-        cargo install --path .
-        rm -rf "$D"
+        # IMPORTANT - put this back when building anything past 11.0.1
+        # set -u
+        # D=$(mktemp -d)
+        # git clone https://github.com/rust-embedded/cross.git "$D"
+        # cd "$D"
+        # curl -O -L "https://gist.githubusercontent.com/nickbabcock/c7bdc8e5974ed9956abf46ffd7dc13ff/raw/e211bc17ea88e505003ad763fac7060b4ac1d8d0/patch"
+        # git apply patch
+        # cargo install --path .
+        # rm -rf "$D"
+        # echo "cross"
 
-        echo "cross"
+        echo "cargo"
     else
         echo "cargo"
     fi
