@@ -7,20 +7,6 @@ if [ -f $HOME/.cargo/env ]; then
     source $HOME/.cargo/env
 fi
 
-# Finds Cargo's `OUT_DIR` directory from the most recent build.
-#
-# This requires one parameter corresponding to the target directory
-# to search for the build output.
-cargo_out_dir() {
-    # This works by finding the most recent stamp file, which is produced by
-    # every ripgrep build.
-    target_dir="$1"
-    find "$target_dir" -name ripgrep-stamp -print0 \
-      | xargs -0 ls -t \
-      | head -n1 \
-      | xargs dirname
-}
-
 host() {
     case "$AGENT_OS" in
         Linux)

@@ -14,6 +14,7 @@ steps:
     cd ripgrep
     git checkout $TREEISH
 - powershell: |
+    echo $env:reason
     Invoke-WebRequest https://win.rustup.rs -UseBasicParsing -OutFile rustup-init.exe
     .\rustup-init.exe -y --default-host $env:TARGET
     $env:PATH+=";C:\Users\appveyor\.cargo\bin"
@@ -26,19 +27,21 @@ steps:
   env:
     RUST_VERSION: ${{ parameters.rust_version }}
     TARGET: ${{ parameters.target }}
+    reason: variables['Build.Reason']
   displayName: Install Rust
 - powershell: |
     $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
     cargo build --release --features pcre2
-    mkdir staging
-    copy target\release\rg.exe staging
-    cd staging
 
-    7z a ../test.zip *
-    #appveyor PushArtifact ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip
+    pushd ..
+    $this_tag=git tag -l --contains HEAD
+    popd
+
+    7z a ${env:OUT_DIR}\ripgrep-${this_tag}-${env:TARGET}.zip target\release\rg.exe
   workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
+    OUT_DIR: $(Build.ArtifactStagingDirectory)
   displayName: Build
 - task: GitHubRelease@0
   inputs:

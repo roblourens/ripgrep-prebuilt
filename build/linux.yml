@@ -24,7 +24,6 @@ steps:
   workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
-    OUT_DIR: $(Build.ArtifactStagingDirectory)
 - script: ../build/package.sh
   displayName: Package
   workingDirectory: ripgrep
