@@ -1,5 +1,7 @@
 steps:
 - task: DownloadPipelineArtifact@2
+  inputs:
+    path: '$(System.ArtifactsDirectory)'
 - task: GitHubRelease@0
   inputs:
     gitHubConnection: GitHub
@@ -8,4 +10,4 @@ steps:
     target: '$(Build.SourceVersion)'
     tagSource: 'auto'
     tag: '$(Build.SourceBranchName)'
-    assets: '$(System.ArtifactsDirectory)/*'
+    assets: '$(System.ArtifactsDirectory)/**'
