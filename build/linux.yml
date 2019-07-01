@@ -19,7 +19,7 @@ steps:
     RUST_VERSION: ${{ parameters.rust_version }}
     TARGET: ${{ parameters.target }}
     GCC_VERSION: ${{ parameters.gcc_version }}
-- script: ../build/script.sh
+- script: ../build/build.sh
   displayName: Build
   workingDirectory: ripgrep
   env:
