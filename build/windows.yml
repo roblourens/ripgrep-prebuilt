@@ -6,50 +6,47 @@ parameters:
   rust_version: 'nightly'
 
 steps:
-# - powershell: |
-#     gci env:*
-#     $REPO=node -p "require('./config.json').ripgrepRepo"
-#     $TREEISH=node -p "require('./config.json').ripgrepTreeish"
-#     git clone https://github.com/${REPO}.git
-#     cd ripgrep
-#     git checkout $TREEISH
-# - powershell: |
-#     echo $env:reason
-#     echo $BUILD_SOURCEVERSION
-#     Invoke-WebRequest https://win.rustup.rs -UseBasicParsing -OutFile rustup-init.exe
-#     .\rustup-init.exe -y --default-host $env:TARGET
-#     $env:PATH+=";C:\Users\appveyor\.cargo\bin"
-
-#     rustup default $env:RUST_VERSION
-#     rustc -V
-#     cargo -V
-
-#     rustup target add $env:TARGET
-#   env:
-#     RUST_VERSION: ${{ parameters.rust_version }}
-#     TARGET: ${{ parameters.target }}
-#     reason: variables['Build.Reason']
-#   displayName: Install Rust
-# - powershell: |
-#     $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
-#     cargo build --release --features pcre2
-
-#     pushd ..
-#     $this_tag=git tag -l --contains HEAD
-#     popd
-
-#     7z a ${env:OUT_DIR}\ripgrep-${this_tag}-${env:TARGET}.zip target\release\rg.exe
-#   displayName: Build
-#   workingDirectory: ripgrep
-#   env:
-#     TARGET: ${{ parameters.target }}
-#     OUT_DIR: $(Build.ArtifactStagingDirectory)
-#   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - powershell: |
-    echo 'payload' > $env:BUILD_ARTIFACTSTAGINGDIRECTORY/$env:TARGET.txt
-    echo "##vso[task.setvariable variable=Name]$env:TARGET.txt"
+    gci env:*
+    $REPO=node -p "require('./config.json').ripgrepRepo"
+    $TREEISH=node -p "require('./config.json').ripgrepTreeish"
+    git clone https://github.com/${REPO}.git
+    cd ripgrep
+    git checkout $TREEISH
+- powershell: |
+    echo $env:reason
+    echo $BUILD_SOURCEVERSION
+    Invoke-WebRequest https://win.rustup.rs -UseBasicParsing -OutFile rustup-init.exe
+    .\rustup-init.exe -y --default-host $env:TARGET
+    $env:PATH+=";C:\Users\appveyor\.cargo\bin"
+
+    rustup default $env:RUST_VERSION
+    rustc -V
+    cargo -V
+
+    rustup target add $env:TARGET
+  env:
+    RUST_VERSION: ${{ parameters.rust_version }}
+    TARGET: ${{ parameters.target }}
+    reason: variables['Build.Reason']
+  displayName: Install Rust
+- powershell: |
+    $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
+    cargo build --release --features pcre2
+
+    pushd ..
+    $this_tag=git tag -l --contains HEAD
+    popd
+
+    $name=ripgrep-${this_tag}-${env:TARGET}.zip
+    7z a ${env:OUT_DIR}\${name} target\release\rg.exe
+    echo "##vso[task.setvariable variable=Name]$name"
+  displayName: Build
+  workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
+    OUT_DIR: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: PublishPipelineArtifact@0
   displayName: 'Publish Pipeline Artifact'
   inputs:

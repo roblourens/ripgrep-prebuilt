@@ -15,12 +15,13 @@ mk_tarball() {
     # When cross-compiling, use the right `strip` tool on the binary.
     local gcc_prefix="$(gcc_prefix)"
 
-    local name="ripgrep-${this_tag}-${TARGET}"
+    local name="ripgrep-${this_tag}-${TARGET}.tar.gz"
 
     # Copy the ripgrep binary and strip it.
     "${gcc_prefix}strip" "target/$TARGET/release/rg"
 
-    tar czf "$OUT_DIR/$name.tar.gz" "target/$TARGET/release/rg"
+    tar czf "$OUT_DIR/$name" "target/$TARGET/release/rg"
+    echo "##vso[task.setvariable variable=Name]$name"
 }
 
 main() {

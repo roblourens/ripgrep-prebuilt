@@ -13,29 +13,24 @@ steps:
     cd ripgrep
     git checkout $TREEISH
   displayName: Clone Ripgrep
-# - script: build/install.sh
-#   displayName: Install Rust
-#   env:
-#     RUST_VERSION: ${{ parameters.rust_version }}
-#     TARGET: ${{ parameters.target }}
-#     GCC_VERSION: ${{ parameters.gcc_version }}
-# - script: ../build/script.sh
-#   displayName: Build
-#   workingDirectory: ripgrep
-#   env:
-#     TARGET: ${{ parameters.target }}
-- script: |
-    echo 'payload' > $BUILD_ARTIFACTSTAGINGDIRECTORY/$TARGET.txt
-    echo "##vso[task.setvariable variable=Name]$TARGET.txt"
+- script: build/install.sh
+  displayName: Install Rust
+  env:
+    RUST_VERSION: ${{ parameters.rust_version }}
+    TARGET: ${{ parameters.target }}
+    GCC_VERSION: ${{ parameters.gcc_version }}
+- script: ../build/script.sh
+  displayName: Build
+  workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
-# - script: ../build/package.sh
-#   displayName: Package
-#   workingDirectory: ripgrep
-#   env:
-#     TARGET: ${{ parameters.target }}
-#     OUT_DIR: $(Build.ArtifactStagingDirectory)
-#   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+- script: ../build/package.sh
+  displayName: Package
+  workingDirectory: ripgrep
+  env:
+    TARGET: ${{ parameters.target }}
+    OUT_DIR: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: PublishPipelineArtifact@0
   displayName: 'Publish Pipeline Artifact'
   inputs:
