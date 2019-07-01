@@ -32,14 +32,14 @@ steps:
   displayName: Install Rust
 - powershell: |
     $env:RUSTFLAGS='-C target-feature=+crt-static -Z unstable-options'
-    cargo build --release --features pcre2
+    cargo build --release --features pcre2 --verbose
 
     pushd ..
     $this_tag=git tag -l --contains HEAD
     popd
 
-    $name=ripgrep-${this_tag}-${env:TARGET}.zip
-    7z a ${env:OUT_DIR}\${name} target\release\rg.exe
+    $name="ripgrep-${this_tag}-${env:TARGET}.zip"
+    Compress-Archive -Update -Path .\target\${env:TARGET}\release\rg.exe -DestinationPath $name
     echo "##vso[task.setvariable variable=Name]$name"
   displayName: Build
   workingDirectory: ripgrep
