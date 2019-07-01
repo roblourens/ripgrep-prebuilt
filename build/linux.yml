@@ -30,6 +30,7 @@ steps:
   env:
     TARGET: ${{ parameters.target }}
     OUT_DIR: $(Build.ArtifactStagingDirectory)
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: GitHubRelease@0
   inputs:
     gitHubConnection: GitHub
@@ -39,3 +40,4 @@ steps:
     tagSource: 'auto'
     assets: '$(Build.ArtifactStagingDirectory)/*'
     isDraft: true
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))

@@ -39,11 +39,12 @@ steps:
     popd
 
     7z a ${env:OUT_DIR}\ripgrep-${this_tag}-${env:TARGET}.zip target\release\rg.exe
+  displayName: Build
   workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
     OUT_DIR: $(Build.ArtifactStagingDirectory)
-  displayName: Build
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: GitHubRelease@0
   inputs:
     gitHubConnection: GitHub
@@ -53,3 +54,4 @@ steps:
     tagSource: 'auto'
     assets: '$(Build.ArtifactStagingDirectory)/*'
     isDraft: true
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))

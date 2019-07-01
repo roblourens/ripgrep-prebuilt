@@ -22,9 +22,6 @@ mk_artifacts() {
 mk_tarball() {
     pushd ..
     this_tag=`git tag -l --contains HEAD`
-    if [ -z $this_tag ]; then
-        this_tag='test'
-    fi
     popd
 
     # When cross-compiling, use the right `strip` tool on the binary.
@@ -35,7 +32,7 @@ mk_tarball() {
     # Copy the ripgrep binary and strip it.
     "${gcc_prefix}strip" "target/$TARGET/release/rg"
 
-    tar czf "target/$TARGET/release/rg" "$OUT_DIR/$name.tar.gz" "$name"
+    tar czf "target/$TARGET/release/rg" "$OUT_DIR/$name.tar.gz"
 }
 
 main() {
