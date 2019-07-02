@@ -15,7 +15,7 @@ mk_tarball() {
     # When cross-compiling, use the right `strip` tool on the binary.
     local gcc_prefix="$(gcc_prefix)"
 
-    local name="ripgrep-${this_tag}-${TARGET}.tar.gz"
+    local name="ripgrep-${this_tag}-${TARGET}.zip"
 
     # Copy the ripgrep binary and strip it.
     "${gcc_prefix}strip" "target/$TARGET/release/rg"
