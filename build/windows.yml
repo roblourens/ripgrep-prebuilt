@@ -13,6 +13,7 @@ steps:
     git clone https://github.com/${REPO}.git
     cd ripgrep
     git checkout $TREEISH
+  displayName: Clone ripgrep
 - powershell: |
     echo $env:reason
     echo $BUILD_SOURCEVERSION
@@ -42,13 +43,12 @@ steps:
     dir
     dir .\target
     dir .\target\${env:TARGET}\release\rg.exe
-    Compress-Archive -Update -Path .\target\${env:TARGET}\release\rg.exe -DestinationPath $name
+    Compress-Archive -Update -Path .\target\${env:TARGET}\release\rg.exe -DestinationPath $env:BUILD_ARTIFACTSTAGINGDIRECTORY\$name
     echo "##vso[task.setvariable variable=Name]$name"
   displayName: Build
   workingDirectory: ripgrep
   env:
     TARGET: ${{ parameters.target }}
-    OUT_DIR: $(Build.ArtifactStagingDirectory)
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
 - task: PublishPipelineArtifact@0
   displayName: 'Publish Pipeline Artifact'

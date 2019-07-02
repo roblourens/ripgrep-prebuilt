@@ -103,6 +103,7 @@ is_osx() {
 
 builder() {
     if is_musl && is_x86_64; then
+        # IMPORTANT - put this back when building anything past 11.0.1
         # set -u
         # D=$(mktemp -d)
         # git clone https://github.com/rust-embedded/cross.git "$D"
@@ -111,6 +112,7 @@ builder() {
         # git apply patch
         # cargo install --path .
         # rm -rf "$D"
+        # echo "cross"
 
         echo "cargo"
     else
