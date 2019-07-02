@@ -20,7 +20,7 @@ mk_tarball() {
     # Copy the ripgrep binary and strip it.
     "${gcc_prefix}strip" "target/$TARGET/release/rg"
 
-    tar -C "target/$TARGET/release" -czf "$OUT_DIR/$name" rg
+    zip -j "$OUT_DIR/$name" ./target/$TARGET/release/rg
     echo "##vso[task.setvariable variable=Name]$name"
 }
 
